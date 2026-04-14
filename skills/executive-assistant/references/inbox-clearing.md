@@ -4,10 +4,10 @@ Use this file as a quick reminder of the default inbox posture.
 
 ## Core rules
 
-- use Gmail *message search*, not thread-only search
-- sweep sent mail so unanswered outbound threads do not disappear
-- for any reply to an existing thread, use `gog gmail send --reply-to-message-id=...` instead of a fresh send with `Re:` in the subject
-- add `--reply-all` when the thread recipients should stay copied
+- use `m365 outlook message list` over explicit `--startTime` / `--endTime` windows (and filter locally) — Outlook does not have Gmail's `is:unread` / `newer_than:` query idiom, and conversation-only views hide individual unread messages
+- sweep the `sentitems` folder so unanswered outbound threads do not disappear
+- for any reply to an existing thread, POST to the Graph `/me/messages/{id}/reply` endpoint via `m365 request` instead of a fresh `m365 outlook mail send` with `Re:` in the subject, so the `conversationId` is preserved
+- use `/me/messages/{id}/replyAll` (not `/reply`) when the thread recipients should stay copied
 - do not leave actionable email in a reviewed batch without one of these outcomes:
   - handled
   - acknowledged with next step

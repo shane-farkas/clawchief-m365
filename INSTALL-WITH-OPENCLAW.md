@@ -2,16 +2,25 @@
 
 Follow this in order.
 
-## 0. Get GOG working
+## 0. Get the m365 CLI working
 
-Complete `SETUP-GOG.md` first.
+Complete `SETUP-M365.md` first.
+
+The default install is **read-only** against Outlook, Calendar, and SharePoint. The only Graph write scope the Entra app ships with is `Tasks.ReadWrite`, so the Microsoft To Do mirror of `clawchief/tasks.md` can run. Every other would-be write (sending mail, creating events, moving messages, updating the SharePoint tracker) is drafted to `{{PRIMARY_UPDATE_CHANNEL}} -> {{PRIMARY_UPDATE_TARGET}}` for manual approval.
 
 Do not continue until these all work:
 
-- Gmail message search
-- Calendar list / event read
-- Sheets metadata read
-- Google Docs read if you plan to use meeting-notes ingestion
+- `m365 status` shows the correct operating account and Entra app registration
+- `m365 outlook message list --folderName inbox --startTime ...` returns recent inbox messages
+- `m365 outlook event list --calendarName Calendar --startDateTime ... --endDateTime ...` returns events
+- `m365 request --url "@graph/me/calendars"` returns the calendar set you expect
+- `m365 spo listitem list --webUrl {{SHAREPOINT_TRACKER_SITE_URL}} --listTitle {{SHAREPOINT_TRACKER_LIST_TITLE}}` reads the outreach tracker
+- `m365 todo list list` shows the Microsoft To Do list named `{{MSTODO_MIRROR_LIST}}` (create it with `m365 todo list add --name "{{MSTODO_MIRROR_LIST}}"` if it does not exist)
+- OneNote / SharePoint Word read works if you plan to use meeting-notes ingestion
+- `workspace/TOOLS.md` has `read_only: true` in its `Operating mode` section
+- `{{PRIMARY_UPDATE_CHANNEL}}` and `{{PRIMARY_UPDATE_TARGET}}` route to a surface you actually watch (Telegram chat, Slack DM, etc.) — in read-only mode this is the only way the assistant can reach you
+
+When you are ready to flip to full write mode, follow the `Flip to write mode` section at the bottom of `SETUP-M365.md` — both the Entra permission swap *and* the `read_only` flag in `workspace/TOOLS.md` have to change.
 
 ## 1. Gather install values
 
@@ -27,7 +36,11 @@ Collect these before editing files:
 - `{{TIMEZONE}}`
 - `{{PRIMARY_UPDATE_CHANNEL}}`
 - `{{PRIMARY_UPDATE_TARGET}}`
-- `{{GOOGLE_SHEET_ID}}`
+- `{{ENTRA_APP_ID}}`
+- `{{ENTRA_TENANT_ID}}`
+- `{{SHAREPOINT_TRACKER_SITE_URL}}`
+- `{{SHAREPOINT_TRACKER_LIST_TITLE}}`
+- `{{MSTODO_MIRROR_LIST}}`
 - `{{TARGET_MARKET}}`
 - `{{TARGET_GEOGRAPHY}}`
 
@@ -88,7 +101,11 @@ Minimum search list:
 - `{{TIMEZONE}}`
 - `{{PRIMARY_UPDATE_CHANNEL}}`
 - `{{PRIMARY_UPDATE_TARGET}}`
-- `{{GOOGLE_SHEET_ID}}`
+- `{{ENTRA_APP_ID}}`
+- `{{ENTRA_TENANT_ID}}`
+- `{{SHAREPOINT_TRACKER_SITE_URL}}`
+- `{{SHAREPOINT_TRACKER_LIST_TITLE}}`
+- `{{MSTODO_MIRROR_LIST}}`
 - `{{TARGET_MARKET}}`
 - `{{TARGET_GEOGRAPHY}}`
 

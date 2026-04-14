@@ -1,6 +1,6 @@
-# clawchief
+# clawchief-m365
 
-`clawchief` is a public OpenClaw starter kit for turning OpenClaw into a founder / chief-of-staff operating system.
+`clawchief-m365` is a Microsoft 365 open-source fork of the `clawchief` OpenClaw starter kit for turning OpenClaw into a founder / chief-of-staff operating system. It swaps the original Google Workspace integration for [CLI for Microsoft 365](https://github.com/pnp/cli-microsoft365) (`m365`) so the same assistant workflows run against Outlook mail, Outlook calendar, and SharePoint instead of Gmail, Google Calendar, and Google Sheets.
 
 It is opinionated about the *architecture* of the workflow, but meant to be customized for your own people, programs, calendars, inboxes, trackers, and recurring routines.
 
@@ -48,7 +48,7 @@ A portable operating model with:
 ### Setup docs
 
 - `INSTALL-WITH-OPENCLAW.md`
-- `SETUP-GOG.md`
+- `SETUP-M365.md`
 - `INSTALL-CHECKLIST.md`
 - `CHANNELS.md`
 - `cron/jobs.template.json`
@@ -85,7 +85,7 @@ That separation is the main thing this repo is trying to teach.
 ## Install order
 
 1. Read `INSTALL-WITH-OPENCLAW.md`
-2. Complete `SETUP-GOG.md`
+2. Complete `SETUP-M365.md`
 3. Copy the skills into `~/.openclaw/skills/`
 4. Copy `clawchief/` and `workspace/` templates into `~/.openclaw/workspace/`
 5. Replace placeholders and customize `workspace/TOOLS.md`
@@ -104,7 +104,8 @@ Customize these first:
 
 ## Core operating lessons baked into this repo
 
-- use Gmail *message-level* search, not thread-only search
+- use `m365 outlook message list` with explicit time-window filters, not conversation-only views that can hide individual unread messages
+- preserve thread context on replies by posting to the Graph `/me/messages/{id}/reply` endpoint instead of sending a fresh `m365 outlook mail send` with a `Re:` subject
 - check *all relevant calendars* before booking
 - keep one canonical live task file
 - archive prior-day completions into a separate file

@@ -5,7 +5,8 @@ Optional background.
 Key lessons from the live evolution of this setup:
 
 - keep a separate source-of-truth layer instead of burying everything in heartbeat text
-- use Gmail *message search*, not thread-only search
+- use `m365 outlook message list` with explicit `--startTime` / `--endTime` windows, not conversation-only views that can hide individual unread messages
+- preserve thread context on replies by posting to the Graph `/me/messages/{id}/reply` endpoint instead of starting a fresh `m365 outlook mail send`
 - check *all relevant calendars* before offering or booking time
 - keep one canonical live task file and a separate completed-task archive
 - separate *task management* from *daily task prep*

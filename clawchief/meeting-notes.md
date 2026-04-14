@@ -8,10 +8,12 @@ Purpose: make AI-generated or shared meeting notes part of the always-on chief-o
 Treat meeting notes as a live operational signal source.
 
 These notes might come from:
-- Google Docs shared to the assistant account
+- OneNote notebooks shared to the assistant account
+- Word documents stored in a known SharePoint / OneDrive folder
 - docs created by an AI notetaker
 - exported meeting summaries
-- transcripts stored in a known folder
+- Teams meeting transcripts stored in OneDrive
+- transcripts stored in any other known folder
 
 Customize the exact source for your environment.
 

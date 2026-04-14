@@ -7,6 +7,16 @@ description: "Prepare {{OWNER_NAME}}'s task list for the day using `clawchief/ta
 
 Use `clawchief/tasks.md` as the canonical live task file and `clawchief/tasks-completed.md` as the completed-task archive.
 
+## Operating mode
+
+This skill is **not gated** by the `read_only` knob in `workspace/TOOLS.md`:
+
+- `clawchief/tasks.md` and `clawchief/tasks-completed.md` are local files, not Graph state, so markdown edits continue regardless of operating mode.
+- `m365 outlook event list` / `m365 request --url "@graph/me/calendars"` are reads, not writes.
+- The Microsoft To Do mirror is the one Graph write this skill makes, and it stays **on** in both modes on purpose: the blast radius is a single private list the principal controls, the `Tasks.ReadWrite` Graph scope is granted in both the read-only and write-mode permission sets in `SETUP-M365.md`, and losing the mirror defeats the point of having today's list on the principal's phone.
+
+If the principal explicitly says "no M365 writes of any kind, including To Do" then stop running the mirror step and leave `clawchief/tasks.md` as the only surface.
+
 ## Core rules
 
 - read `clawchief/priority-map.md` before regrouping or inserting active tasks
@@ -20,6 +30,7 @@ Use `clawchief/tasks.md` as the canonical live task file and `clawchief/tasks-co
 - keep assistant tasks clearly separate from principal tasks
 - archive tasks completed yesterday out of `clawchief/tasks.md` into `clawchief/tasks-completed.md`
 - keep tasks completed today in `clawchief/tasks.md` until the next morning's prep run unless the user explicitly wants earlier cleanup
+- after the markdown edit settles, mirror the final principal `## Today` list into the Microsoft To Do list named `{{MSTODO_MIRROR_LIST}}` so the principal sees it on their phone / desktop To Do app (mirror is one-way, markdown stays canonical)
 - update the file's `Last updated` timestamp
 - stay silent unless something needs human attention
 
@@ -40,18 +51,74 @@ Use `clawchief/tasks.md` as the canonical live task file and `clawchief/tasks-co
 8. preserve or assign each active task to the best matching owner section plus program / person grouping header
 9. reorder the open tasks in priority-first order within each owner section
 10. write back only the minimal necessary edits
+11. mirror the final principal `## Today` list into Microsoft To Do (see `Microsoft To Do mirror` below)
 
 ## Calendar workflow
 
-Use `gog` via shell to inspect the principal's visible calendars before adding meeting tasks.
+Use the `m365` CLI ([cli-microsoft365](https://github.com/pnp/cli-microsoft365)) to inspect the principal's visible calendars before adding meeting tasks.
 
-Useful pattern:
+Useful pattern (today's events on the default calendar):
 
 ```bash
-gog calendar events --all -a {{ASSISTANT_EMAIL}} --days=1 --max=100 --json --results-only
+m365 outlook event list \
+  --calendarName Calendar \
+  --startDateTime "$(date -u +%Y-%m-%dT00:00:00Z)" \
+  --endDateTime   "$(date -u -v+1d +%Y-%m-%dT00:00:00Z 2>/dev/null || date -u -d '+1 day' +%Y-%m-%dT00:00:00Z)" \
+  --output json
+```
+
+If the principal has more than one calendar, enumerate them first through Graph and repeat the `event list` call per calendar:
+
+```bash
+m365 request --url "@graph/me/calendars" --output json
 ```
 
 Only add calendar items that the principal is actually expected to attend.
+
+## Microsoft To Do mirror
+
+After the markdown task file has been rewritten, rebuild the Microsoft To Do list named `{{MSTODO_MIRROR_LIST}}` from the **principal** `## Today` section. The list is a human-visibility surface, not a second source of truth — `clawchief/tasks.md` remains canonical.
+
+Run the mirror only when the principal `## Today` list changed during this run (or when the mirror list is currently empty). If tasks.md was not modified, skip the mirror entirely.
+
+Mirror logic:
+
+1. read the current tasks on the mirror list:
+
+   ```bash
+   m365 todo task list --listName "{{MSTODO_MIRROR_LIST}}" --output json
+   ```
+
+2. if the list does not exist yet, create it once:
+
+   ```bash
+   m365 todo list add --name "{{MSTODO_MIRROR_LIST}}"
+   ```
+
+3. delete every existing task on the mirror list:
+
+   ```bash
+   m365 todo task remove --listName "{{MSTODO_MIRROR_LIST}}" --id <taskId> --force
+   ```
+
+4. for each principal-owned item in the new `## Today` section of `clawchief/tasks.md`, create a task:
+
+   ```bash
+   m365 todo task add \
+     --listName "{{MSTODO_MIRROR_LIST}}" \
+     --title "<task text from tasks.md>"
+   ```
+
+Optional enrichments when the task text supports them:
+- if the task has a timed due (for example `2026-04-15 14:30 {{TIMEZONE}}`), pass `--dueDateTime <ISO 8601 UTC>`
+- if the task is tagged P0 / P1 in the priority map, pass `--importance high`
+- do not try to sync `bodyContent`, categories, or reminders — keep the mirror simple
+
+What the mirror must **not** do:
+- do not include assistant-owned tasks (they are not for the phone)
+- do not include `## Every weekday`, `## Backlog with due date`, or `## Recurring reminders` sources — only the materialized `## Today`
+- do not try to read Microsoft To Do state back into `clawchief/tasks.md`; MS To Do is downstream only
+- if `m365 todo` calls fail, leave `clawchief/tasks.md` alone, log a short note, and continue — the markdown ledger must never be blocked on the mirror
 
 ## Task text rules
 
@@ -67,4 +134,5 @@ Only add calendar items that the principal is actually expected to attend.
 - do not archive recurring source items from `## Recurring reminders`
 - do not archive tasks completed today during the same day's prep run
 - if calendar access fails, still do file-based prep and only notify the user if the failure matters
+- if the Microsoft To Do mirror call fails, keep the markdown edits and log the failure quietly — never roll back `clawchief/tasks.md` because of a mirror failure
 - if nothing needs to change, do nothing

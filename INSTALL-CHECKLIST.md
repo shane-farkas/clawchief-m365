@@ -2,13 +2,22 @@
 
 The install is good only if every item below passes.
 
-## GOG
+## M365 CLI
 
-- [ ] `gog auth list` shows the correct operating account
-- [ ] Gmail *message search* works
-- [ ] Calendar list / read works
-- [ ] Sheets metadata read works
-- [ ] Google Docs read works if meeting-notes ingestion is enabled
+- [ ] `m365 status` shows the correct operating account, Entra app id, and tenant
+- [ ] `m365 outlook message list --folderName inbox --startTime ...` returns recent inbox messages
+- [ ] `m365 outlook event list --calendarName Calendar --startDateTime ... --endDateTime ...` returns events
+- [ ] `m365 request --url "@graph/me/calendars"` returns the calendar set you expect
+- [ ] `m365 spo listitem list --webUrl {{SHAREPOINT_TRACKER_SITE_URL}} --listTitle {{SHAREPOINT_TRACKER_LIST_TITLE}}` reads the outreach tracker
+- [ ] `m365 todo task list --listName {{MSTODO_MIRROR_LIST}}` succeeds (list exists and is readable)
+- [ ] OneNote / SharePoint read works if meeting-notes ingestion is enabled
+
+## Operating mode
+
+- [ ] `workspace/TOOLS.md` has an explicit `read_only:` line (`true` for first-run, `false` only after the Entra permission swap in `SETUP-M365.md` has been done)
+- [ ] the Entra app's delegated Graph permissions match the section in `SETUP-M365.md` that corresponds to the current `read_only` setting (read-only default or the `Flip to write mode` upgrade set)
+- [ ] `{{PRIMARY_UPDATE_CHANNEL}}` / `{{PRIMARY_UPDATE_TARGET}}` is a channel the principal actually watches — in read-only mode every would-be action gets drafted here
+- [ ] if flipping modes, `m365 logout` + `m365 login ...` has been re-run so the new scopes are consented on the active token
 
 ## Skills
 
@@ -34,13 +43,16 @@ The install is good only if every item below passes.
 
 - [ ] heartbeat reads the source-of-truth files instead of duplicating workflow logic
 - [ ] proactive updates route to the intended channel + target
-- [ ] inbox sweeps use *message-level* Gmail search
-- [ ] scheduling checks all relevant calendars before booking
+- [ ] when `read_only: true`, no Graph / SharePoint writes are being issued against Outlook mail, events, or the tracker — every would-be write becomes a drafted proposal on `{{PRIMARY_UPDATE_CHANNEL}}`
+- [ ] the Microsoft To Do mirror is the only Graph write in read-only mode (`Tasks.ReadWrite` is the only write scope granted in the default permission set)
+- [ ] inbox sweeps use `m365 outlook message list` with explicit time-window filters (not conversation-only views)
+- [ ] scheduling checks all relevant calendars before booking (and in read-only mode, drafts the proposed event to the update channel instead of creating it)
 - [ ] the task system uses `clawchief/tasks.md` as the live source of truth
 - [ ] prior-day completed tasks archive into `clawchief/tasks-completed.md`
 - [ ] meeting notes are treated as a live signal source if enabled
-- [ ] business-development work treats the outreach sheet as the live source of truth
+- [ ] business-development work treats the outreach tracker as the live source of truth (and in read-only mode, drafts proposed row changes to the update channel instead of writing them)
 - [ ] daily task prep promotes due-today items into `## Today`
+- [ ] daily task prep mirrors the final principal `## Today` list into the `{{MSTODO_MIRROR_LIST}}` Microsoft To Do list as a one-way human-visibility surface (runs in both read-only and write modes)
 
 ## Cron
 

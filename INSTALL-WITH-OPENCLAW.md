@@ -11,8 +11,8 @@ The default install is **read-only** against Outlook, Calendar, and SharePoint. 
 Do not continue until these all work:
 
 - `m365 status` shows the correct operating account and Entra app registration
-- `m365 outlook message list --folderName inbox --startTime ...` returns recent inbox messages
-- `m365 outlook event list --calendarName Calendar --startDateTime ... --endDateTime ...` returns events
+- `m365 outlook message list --folderName inbox --startTime "$(date -u -d '-7 days' +%Y-%m-%dT%H:%M:%SZ)" --output json` returns recent inbox messages
+- `m365 request --url "@graph/me/events?\$filter=start/dateTime ge '$(date -u +%Y-%m-%dT00:00:00)' and start/dateTime le '$(date -u -d '+2 days' +%Y-%m-%dT00:00:00)'&\$orderby=start/dateTime&\$top=50" --output json` returns events (the v11 CLI dropped `outlook event list`, so calendar reads now go through Graph)
 - `m365 request --url "@graph/me/calendars"` returns the calendar set you expect
 - `m365 spo listitem list --webUrl {{SHAREPOINT_TRACKER_SITE_URL}} --listTitle {{SHAREPOINT_TRACKER_LIST_TITLE}}` reads the outreach tracker
 - `m365 todo list list` shows the Microsoft To Do list named `{{MSTODO_MIRROR_LIST}}` (create it with `m365 todo list add --name "{{MSTODO_MIRROR_LIST}}"` if it does not exist)

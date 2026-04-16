@@ -26,7 +26,7 @@ Flip to full write mode later by:
 
 1. changing this knob to `read_only: false`
 2. upgrading the Entra app registration's delegated Graph permissions (see `SETUP-M365.md` section **Flip to write mode**) and re-granting admin consent
-3. running `m365 logout` and then `m365 login ...` again so the new scopes get consented
+3. running `m365 logout` and then `m365 login --authType deviceCode --appId {{ENTRA_APP_ID}} --tenant {{ENTRA_TENANT_ID}} --connectionName clawchief` again so the new scopes get consented
 
 Both steps are required — flipping the TOOLS.md knob without re-consenting new scopes will just cause Graph writes to fail with 403; re-consenting without flipping the knob will still behave as read-only because the skills check this file first.
 

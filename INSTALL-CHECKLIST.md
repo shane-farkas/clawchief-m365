@@ -5,8 +5,8 @@ The install is good only if every item below passes.
 ## M365 CLI
 
 - [ ] `m365 status` shows the correct operating account, Entra app id, and tenant
-- [ ] `m365 outlook message list --folderName inbox --startTime ...` returns recent inbox messages
-- [ ] `m365 outlook event list --calendarName Calendar --startDateTime ... --endDateTime ...` returns events
+- [ ] `m365 outlook message list --folderName inbox --startTime "$(date -u -d '-7 days' +%Y-%m-%dT%H:%M:%SZ)" --output json` returns recent inbox messages
+- [ ] `m365 request --url "@graph/me/events?\$filter=start/dateTime ge '$(date -u +%Y-%m-%dT00:00:00)' and start/dateTime le '$(date -u -d '+2 days' +%Y-%m-%dT00:00:00)'&\$orderby=start/dateTime&\$top=50" --output json` returns events (the v11 CLI dropped `outlook event list`, so calendar reads now go through Graph)
 - [ ] `m365 request --url "@graph/me/calendars"` returns the calendar set you expect
 - [ ] `m365 spo listitem list --webUrl {{SHAREPOINT_TRACKER_SITE_URL}} --listTitle {{SHAREPOINT_TRACKER_LIST_TITLE}}` reads the outreach tracker
 - [ ] `m365 todo task list --listName {{MSTODO_MIRROR_LIST}}` succeeds (list exists and is readable)
@@ -17,7 +17,7 @@ The install is good only if every item below passes.
 - [ ] `workspace/TOOLS.md` has an explicit `read_only:` line (`true` for first-run, `false` only after the Entra permission swap in `SETUP-M365.md` has been done)
 - [ ] the Entra app's delegated Graph permissions match the section in `SETUP-M365.md` that corresponds to the current `read_only` setting (read-only default or the `Flip to write mode` upgrade set)
 - [ ] `{{PRIMARY_UPDATE_CHANNEL}}` / `{{PRIMARY_UPDATE_TARGET}}` is a channel the principal actually watches — in read-only mode every would-be action gets drafted here
-- [ ] if flipping modes, `m365 logout` + `m365 login ...` has been re-run so the new scopes are consented on the active token
+- [ ] if flipping modes, `m365 logout` + `m365 login --authType deviceCode --appId {{ENTRA_APP_ID}} --tenant {{ENTRA_TENANT_ID}} --connectionName clawchief` has been re-run so the new scopes are consented on the active token
 
 ## Skills
 

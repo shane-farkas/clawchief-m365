@@ -72,7 +72,7 @@ Complete the device code prompt in a browser using the operating mailbox account
 Persist the active connection:
 
 ```bash
-m365 connection set clawchief
+m365 connection use clawchief
 m365 status
 ```
 
@@ -91,14 +91,10 @@ Important: use Outlook **message-level** listing over defined time windows for i
 
 ## 5. Verify Outlook calendar read
 
-```bash
-m365 outlook calendar get --name Calendar --output json
+`m365` v11 dropped the dedicated `outlook event list` / `outlook calendar get` commands — calendar reads now go through `m365 request` against Microsoft Graph.
 
-m365 outlook event list \
-  --calendarName Calendar \
-  --startDateTime "$(date -u +%Y-%m-%dT00:00:00Z)" \
-  --endDateTime   "$(date -u -v+2d +%Y-%m-%dT00:00:00Z 2>/dev/null || date -u -d '+2 days' +%Y-%m-%dT00:00:00Z)" \
-  --output json
+```bash
+m365 request --url "@graph/me/events?\$filter=start/dateTime ge '$(date -u +%Y-%m-%dT00:00:00)' and start/dateTime le '$(date -u -d '+2 days' +%Y-%m-%dT00:00:00)'&\$orderby=start/dateTime&\$top=50" --output json
 ```
 
 If the principal has more than one calendar (work, personal, shared), list them explicitly through Graph:
@@ -122,7 +118,7 @@ m365 request \
     "end":{"dateTime":"2099-01-01T09:15:00","timeZone":"UTC"}
   }'
 
-m365 outlook event remove --id <event-id-from-previous-response> --force
+m365 request --method delete --url "@graph/me/events/<event-id-from-previous-response>"
 ```
 
 ## 7. Verify SharePoint outreach tracker

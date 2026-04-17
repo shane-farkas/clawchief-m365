@@ -83,7 +83,35 @@ Add additional calendars here as needed (e.g. shared team calendar, family calen
 - Document the current list's internal field names here if your schema is customized (SharePoint display names and internal names can differ, and `m365 spo listitem set` expects internal names).
 - If you host the tracker as an Excel workbook in SharePoint or OneDrive instead of a SharePoint list, document the drive item id and table name here as well.
 
-## Microsoft To Do mirror
+## Microsoft To Do — reading all tasks
+
+To get a full picture of the principal's open tasks across all Microsoft To Do lists, use a two-step pattern:
+
+**Step 1 — list all To Do lists:**
+```bash
+m365 todo list list --output json
+```
+This returns an array of lists, each with an `id` and `displayName`.
+
+**Step 2 — for each list, pull non-complete tasks:**
+```bash
+m365 request --url "@graph/me/todo/lists/<listId>/tasks?\$filter=status ne 'completed'&\$top=100" --output json
+```
+Replace `<listId>` with the `id` from step 1. Repeat for every list.
+
+**Shortcut if `m365 todo task list` works for a given list:**
+```bash
+m365 todo task list --listName "<displayName>" --output json
+```
+Then filter the JSON locally for `status != "completed"`.
+
+**Important:**
+- Some lists may be empty or contain only completed tasks — that is expected.
+- The "Tasks" list is the default inbox list. Other lists are user-created.
+- When importing into `clawchief/tasks.md`, group tasks by their source list name or map them to program sections from `clawchief/priority-map.md`.
+- After the initial import, `clawchief/tasks.md` becomes the canonical source. Subsequent syncs should be additive (don't re-import tasks already in the file).
+
+## Microsoft To Do mirror (outbound)
 
 - Mirror list name: `{{MSTODO_MIRROR_LIST}}`
 - Canonical task source: `clawchief/tasks.md`

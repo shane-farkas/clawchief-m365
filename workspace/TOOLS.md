@@ -85,7 +85,7 @@ Add additional calendars here as needed (e.g. shared team calendar, family calen
 
 ## Microsoft To Do — reading all tasks
 
-To get a full picture of the principal's open tasks across all Microsoft To Do lists, use a two-step pattern:
+To get a full picture of the principal's open tasks across all Microsoft To Do lists, use Graph API calls via `m365 request`. **Do not use `m365 todo task list`** — it hangs and times out. The `--filter` flag does not exist on that command. Always use the Graph approach below.
 
 **Step 1 — list all To Do lists:**
 ```bash
@@ -93,23 +93,24 @@ m365 todo list list --output json
 ```
 This returns an array of lists, each with an `id` and `displayName`.
 
-**Step 2 — for each list, pull non-complete tasks:**
+**Step 2 — for each list, pull non-complete tasks via Graph:**
 ```bash
-m365 request --url "@graph/me/todo/lists/<listId>/tasks?\$filter=status ne 'completed'&\$top=100" --output json
+m365 request --url "https://graph.microsoft.com/v1.0/me/todo/lists/<listId>/tasks?\$filter=status%20ne%20'completed'" --output json
 ```
-Replace `<listId>` with the `id` from step 1. Repeat for every list.
+Replace `<listId>` with the `id` from step 1. Repeat for every list. Use the full URL (`https://graph.microsoft.com/v1.0/...`), not the `@graph` shorthand — it is more reliable with URL-encoded filters.
 
-**Shortcut if `m365 todo task list` works for a given list:**
+**Step 3 — pull "Assigned to me" tasks (from Microsoft Planner):**
 ```bash
-m365 todo task list --listName "<displayName>" --output json
+m365 request --url "https://graph.microsoft.com/v1.0/me/planner/tasks?\$filter=percentComplete%20ne%20100" --output json
 ```
-Then filter the JSON locally for `status != "completed"`.
+Planner fields differ from To Do: use `title` (not `subject`), `percentComplete` (100 = done), and `dueDateTime`.
 
 **Important:**
 - Some lists may be empty or contain only completed tasks — that is expected.
 - The "Tasks" list is the default inbox list. Other lists are user-created.
 - When importing into `clawchief/tasks.md`, group tasks by their source list name or map them to program sections from `clawchief/priority-map.md`.
 - After the initial import, `clawchief/tasks.md` becomes the canonical source. Subsequent syncs should be additive (don't re-import tasks already in the file).
+- **Never use `m365 todo task list --listName`** for reads — it hangs. Always use `m365 request` with the full Graph URL.
 
 ## Microsoft To Do mirror (outbound)
 

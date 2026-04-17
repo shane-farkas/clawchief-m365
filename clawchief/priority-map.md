@@ -1,6 +1,6 @@
 # Priority Map
 
-Purpose: define who and what should matter enough to interrupt Ryan, trigger R2 action, or be safely ignored.
+Purpose: define who and what should matter enough to interrupt {{OWNER_NAME}}, trigger {{ASSISTANT_NAME}} action, or be safely ignored.
 
 This file is the canonical "people + programs" layer for OpenClaw prioritization.
 
@@ -33,25 +33,25 @@ If a signal maps to no important people and no important programs, it should usu
 
 - **P0 — interrupt now**
   - time-sensitive, high-stakes, or blocking
-  - appropriate to put in front of Ryan quickly
+  - appropriate to put in front of {{OWNER_NAME}} quickly
 - **P1 — same day**
   - important enough to surface today
-  - may require Ryan or R2 action today
+  - may require {{OWNER_NAME}} or {{ASSISTANT_NAME}} action today
 - **P2 — digest / batched**
-  - worth tracking, but not worth interrupting Ryan for immediately
+  - worth tracking, but not worth interrupting {{OWNER_NAME}} for immediately
 - **P3 — ignore / archive**
   - low-value noise, duplicative context, or non-actionable chatter
 
 ## Action modes
 
-- **Interrupt Ryan now** — surface directly in Slack as a short, clear alert
-- **Handle and summarize** — R2 acts, then gives Ryan a concise update if helpful
+- **Interrupt {{OWNER_NAME}} now** — surface directly in Slack as a short, clear alert
+- **Handle and summarize** — {{ASSISTANT_NAME}} acts, then gives {{OWNER_NAME}} a concise update if helpful
 - **Queue for digest** — hold for next structured summary / heartbeat if still relevant
 - **Ignore** — no user-facing message needed
 
 ## Task grouping convention
 
-Todoist labels and section choices should connect back to this file's program/person grouping when there is a clear match.
+clawchief/tasks.md labels and section choices should connect back to this file's program/person grouping when there is a clear match.
 
 Preferred pattern:
 
@@ -61,10 +61,10 @@ Preferred pattern:
 - labels only for secondary context when they add real value
 
 Rules:
-- Use the exact program names from this file when choosing Todoist sections whenever there is a clear match.
+- Use the exact program names from this file when choosing clawchief/tasks.md sections whenever there is a clear match.
 - If a task does not clearly map to a program or person here, leave it unlabeled rather than inventing a noisy label.
 - Do not use workflow-state sections like `Today`, `Next`, `Waiting`, or `Scheduled`; due dates should carry timing/state instead.
-- Preserve stable program grouping unless Ryan explicitly wants a regroup.
+- Preserve stable program grouping unless {{OWNER_NAME}} explicitly wants a regroup.
 
 ## People
 
@@ -72,44 +72,44 @@ People are not only important because they are operationally relevant.
 They are also important because they matter relationally to the principal.
 The system should treat trust, family, loyalty, and relationship depth as real prioritization signals, not just logistics.
 
-### Ryan Carson
+### {{OWNER_NAME}}
 - Why he matters:
   - he is the principal, the decision-maker, and the person this whole system exists to help
 - Watch for:
   - direct asks
   - approvals needed
-  - decisions only Ryan can make
+  - decisions only {{OWNER_NAME}} can make
   - anything that affects his calendar, travel, or revenue priorities
 - Escalate to P0 when:
   - there is a hard deadline within 24 hours
   - there is a meeting conflict or urgent scheduling issue
   - a prospect / partner / investor / board item is blocked on him
 - Default action:
-  - usually interrupt Ryan now or handle and summarize
+  - usually interrupt {{OWNER_NAME}} now or handle and summarize
 
 ## Core personal relationships
 
 ### Spouse / partner
 - Why they matter:
-  - this relationship is central to Ryan's life and scheduling reality
+  - this relationship is central to {{OWNER_NAME}}'s life and scheduling reality
 - Watch for:
   - shared-calendar conflicts
-  - family logistics that affect Ryan's schedule
+  - family logistics that affect {{OWNER_NAME}}'s schedule
   - messages or situations that need coordination, support, or a response
   - board-related context when the spouse / partner is directly involved
 - Escalate to P0 when:
-  - same-day family logistics affect Ryan's time or commitments
-  - there is a time-sensitive ask Ryan should see quickly
+  - same-day family logistics affect {{OWNER_NAME}}'s time or commitments
+  - there is a time-sensitive ask {{OWNER_NAME}} should see quickly
 - Default action:
   - handle and summarize unless immediate attention is clearly warranted
 
 ### Children
 - Why they matter:
-  - family matters involving Ryan's children are intrinsically important, not merely administrative
+  - family matters involving {{OWNER_NAME}}'s children are intrinsically important, not merely administrative
 - Watch for:
   - scheduling, school, travel, family coordination, health, or other time-sensitive needs
 - Escalate to P0 when:
-  - there is same-day schedule impact, urgency, or something Ryan would strongly want to know quickly
+  - there is same-day schedule impact, urgency, or something {{OWNER_NAME}} would strongly want to know quickly
 - Default action:
   - handle and summarize, escalating when time-sensitive
 
@@ -117,7 +117,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 - Why they matter:
   - family communication with parents should be treated as emotionally meaningful, not background noise
 - Watch for:
-  - calls, reminders, family updates, health changes, travel, or anything that may matter to Ryan personally
+  - calls, reminders, family updates, health changes, travel, or anything that may matter to {{OWNER_NAME}} personally
 - Escalate to P0 when:
   - there is important family news, health news, or time-sensitive coordination
 - Default action:
@@ -127,7 +127,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 - Why they matter:
   - sibling and extended family developments should count as real priority signals when relevant
 - Watch for:
-  - meaningful family updates, moves, coordination, birthdays, or requests that would matter to Ryan
+  - meaningful family updates, moves, coordination, birthdays, or requests that would matter to {{OWNER_NAME}}
 - Escalate to P1 when:
   - there is important family news or a time-sensitive ask
 - Default action:
@@ -139,8 +139,8 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 - Why they matter:
   - recurring pet care should be treated as a real responsibility, not generic admin
 - Watch for:
-  - care reminders Ryan explicitly wants tracked
-  - time-sensitive pet logistics that affect Ryan's day or travel
+  - care reminders {{OWNER_NAME}} explicitly wants tracked
+  - time-sensitive pet logistics that affect {{OWNER_NAME}}'s day or travel
 - Escalate to P1 when:
   - same-day care or travel coordination could be missed
 - Default action:
@@ -158,14 +158,14 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 - Escalate to P1 when:
   - there is a clear reply opportunity or useful follow-up that should not sit
 - Default action:
-  - handle and summarize; do not over-interrupt Ryan unless strategically relevant
+  - handle and summarize; do not over-interrupt {{OWNER_NAME}} unless strategically relevant
 
 ## Important work / strategic relationships
 
-### Linda Douglas
-- Why she matters:
-  - she is a key trusted operator for Untangle - our Chief Legal Officer
-  - legal, policy, standards, and sensitive operating judgment run through her
+### {{KEY_LEGAL_CONTACT_NAME}}
+- Why they matter:
+  - key trusted operator for {{BUSINESS_NAME}} — Chief Legal Officer (or equivalent)
+  - legal, policy, standards, and sensitive operating judgment run through them
 - Watch for:
   - legal/compliance questions
   - policy claims that should not be answered casually
@@ -174,12 +174,12 @@ The system should treat trust, family, loyalty, and relationship depth as real p
   - a live thread needs a legal or policy answer to keep moving
   - a risky outbound response is about to be sent without approved guidance
 - Default action:
-  - handle and summarize, or interrupt Ryan if Linda input is blocking an important thread
+  - handle and summarize, or interrupt {{OWNER_NAME}} if their input is blocking an important thread
 
-### Phil Schwarz
-- Why he matters:
-  - he is on the Untangle board, representing Corazon Capital who own's 15% of Untangle, and is a high-trust strategic relationship
-  - communication involving Phil can affect Ryan's strategic accountability and support structure
+### {{BOARD_MEMBER_NAME}}
+- Why they matter:
+  - they sit on the {{BUSINESS_NAME}} board (or represent a key investor) and are a high-trust strategic relationship
+  - communication involving them can affect {{OWNER_NAME}}'s strategic accountability and support structure
 - Watch for:
   - board updates
   - investor communications
@@ -187,7 +187,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 - Escalate to P0 when:
   - there is a near-term board/investor deadline or a sensitive strategic issue
 - Default action:
-  - handle and summarize unless Ryan decision is required soon
+  - handle and summarize unless {{OWNER_NAME}} decision is required soon
 
 ## Dynamic people groups
 
@@ -202,7 +202,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 - Default action:
   - handle and summarize
 
-### Untangle Angel Investors
+### Angel Investors
 - Why they matter:
   - high-signal strategic communication
 - Watch for:
@@ -216,7 +216,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 
 ### First 10 paying customers
 - Why it matters:
-  - Ryan said this is the immediate top company priority
+  - {{OWNER_NAME}} said this is the immediate top company priority
 - Q2 target ladder:
   - 2026-04-30: 10 total customers
   - 2026-05-31: 20 total customers
@@ -230,19 +230,19 @@ The system should treat trust, family, loyalty, and relationship depth as real p
   - customer objections
   - offers, pilots, pricing reactions, conversion bottlenecks
 - Escalate to P0 when:
-  - a near-term revenue opportunity is blocked on Ryan
+  - a near-term revenue opportunity is blocked on {{OWNER_NAME}}
   - there is a hot prospect / partner thread needing same-day action
 - Default action:
-  - handle and summarize or interrupt Ryan if his action is required today
+  - handle and summarize or interrupt {{OWNER_NAME}} if his action is required today
 - Ignore / downgrade:
   - vague marketing ideas with no clear next step
 
 ### Instagram content
 - Why it matters:
-  - this is a specific GTM program Ryan is actively using
+  - this is a specific GTM program {{OWNER_NAME}} is actively using
   - it supports authority, reach, and customer acquisition
 - Watch for:
-  - recording videos with Linda or partners, editing, posting, scheduling, distribution, and follow-up needs
+  - recording videos with team or partners, editing, posting, scheduling, distribution, and follow-up needs
 - Escalate to P1 when:
   - a recording window, publishing deadline, or blocker could stall momentum
 - Default action:
@@ -251,7 +251,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 ### AEO / SEO
 - Why it matters:
   - compounding acquisition channel
-  - improves discoverability for people actively searching for divorce help
+  - improves discoverability for people actively searching for help in {{TARGET_MARKET}}
 - Watch for:
   - rankings, content opportunities, technical issues, and search-performance changes
 - Escalate to P1 when:
@@ -267,7 +267,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 - Escalate to P1 when:
   - spend, delivery, or setup problems are blocking acquisition
 - Default action:
-  - handle and summarize, escalating when Ryan decision is needed
+  - handle and summarize, escalating when {{OWNER_NAME}} decision is needed
 
 ### Google Ads
 - Why it matters:
@@ -277,24 +277,24 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 - Escalate to P1 when:
   - a change materially affects traffic, lead flow, or spend efficiency
 - Default action:
-  - handle and summarize, escalating when Ryan decision is needed
+  - handle and summarize, escalating when {{OWNER_NAME}} decision is needed
 
-### Fresh Start Registry partnership with Olivia
+### {{NAMED_PARTNERSHIP}} partnership with {{PARTNER_CONTACT_NAME}}
 - Why it matters:
   - named partnership program with direct distribution and credibility implications
 - Watch for:
-  - communication with Olivia
+  - communication with {{PARTNER_CONTACT_NAME}}
   - partnership tasks
   - dashboard / listing work
   - magazine / expert / feature opportunities
 - Escalate to P1 when:
-  - the partnership is blocked, an opportunity is live, or Ryan input is needed to keep momentum
+  - the partnership is blocked, an opportunity is live, or {{OWNER_NAME}} input is needed to keep momentum
 - Default action:
   - handle and summarize
 
 ### Business development partnerships
 - Why it matters:
-  - this is the live BD motion for building partnerships with attorneys, divorce coaches, and marriage counselors
+  - this is the live BD motion for building partnerships with professionals in {{TARGET_MARKET}}
 - Watch for:
   - outreach replies
   - follow-up gaps
@@ -309,7 +309,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 
 ### Executive assistant: inbox, calendar, travel, schedule integrity
 - Why it matters:
-  - this is the operating system for Ryan's day-to-day execution capacity
+  - this is the operating system for {{OWNER_NAME}}'s day-to-day execution capacity
   - inbox, scheduling, travel, and coordination tasks can create immediate drag or unblock important work
 - Watch for:
   - scheduling follow-ups
@@ -337,40 +337,39 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 - Default action:
   - handle and summarize
 
-### 121G venture fund wind-down
+### {{VENTURE_FUND_NAME}} venture fund wind-down
 - Why it matters:
-  - Ryan runs a small venture fund called 121G
-  - it is expected to wind down at the end of 2026
+  - {{OWNER_NAME}} runs a small venture fund that is winding down
   - it still creates real investor, admin, and communication obligations that should not get lost
 - Watch for:
   - inbox follow-up
   - investor updates
   - admin or communication tasks that still require attention
-  - wind-down obligations, deadlines, or cleanup tasks tied to 2026
+  - wind-down obligations, deadlines, or cleanup tasks
 - Escalate to P1 when:
-  - an investor-facing or time-sensitive 121G item is waiting
+  - an investor-facing or time-sensitive item is waiting
   - a wind-down deadline or obligation needs action
 - Default action:
   - handle and summarize
 
 ### Board / investor communication
 - Why it matters:
-  - board and investor communication affects Ryan's strategic accountability, financing context, and external trust
+  - board and investor communication affects {{OWNER_NAME}}'s strategic accountability, financing context, and external trust
 - Watch for:
   - investor updates
   - board reports
-  - materials due to Phil or investors
+  - materials due to board members or investors
   - recurring reporting obligations
 - Escalate to P1 when:
   - a board or investor deliverable is due soon
-  - a strategic response needs Ryan input or careful wording
+  - a strategic response needs {{OWNER_NAME}} input or careful wording
 - Default action:
   - handle and summarize
 
 ### Family / personal logistics
 - Why it matters:
   - family and personal obligations are real priorities, not background admin
-  - they affect Ryan's life directly and often affect his capacity for work too
+  - they affect {{OWNER_NAME}}'s life directly and often affect his capacity for work too
 - Watch for:
   - birthdays
   - anniversaries
@@ -378,7 +377,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
   - personal reminders
   - family coordination
 - Escalate to P1 when:
-  - a family obligation is time-sensitive or emotionally important enough that Ryan would want it surfaced promptly
+  - a family obligation is time-sensitive or emotionally important enough that {{OWNER_NAME}} would want it surfaced promptly
 - Default action:
   - handle and summarize
 
@@ -398,7 +397,7 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 
 ### Home / household
 - Why it matters:
-  - the house, car, boat, and recurring maintenance tasks create real operational load and can become expensive or disruptive if missed
+  - the house, vehicles, and recurring maintenance tasks create real operational load and can become expensive or disruptive if missed
 - Watch for:
   - service scheduling
   - maintenance reminders
@@ -416,10 +415,9 @@ The system should treat trust, family, loyalty, and relationship depth as real p
   - this is a named recurring role / program, not generic admin
   - this work is a real recurring commitment and should not disappear into generic admin noise
 - Watch for:
-  - Newsworthy
-  - Spyglass
+  - newsletter / publication deadlines
   - committee communications
-  - scheduling or content obligations tied to EYC
+  - scheduling or content obligations tied to {{COMMUNITY_ORG_NAME}}
 - Escalate to P1 when:
   - a publication, deadline, or committee obligation is time-sensitive
 - Default action:
@@ -427,14 +425,14 @@ The system should treat trust, family, loyalty, and relationship depth as real p
 
 ### clawchief improvement
 - Why it matters:
-  - compounds R2 effectiveness over time
+  - compounds {{ASSISTANT_NAME}} effectiveness over time
 - Watch for:
   - operator patterns worth copying
   - setup changes that improve autonomy, prioritization, or execution
-  - concrete opportunities to improve the system Ryan uses daily
+  - concrete opportunities to improve the system {{OWNER_NAME}} uses daily
   - new OpenClaw capabilities that can be turned into better clawchief workflows
 - Escalate to P1 when:
-  - Ryan explicitly asks for system improvement work or a change is clearly high leverage
+  - {{OWNER_NAME}} explicitly asks for system improvement work or a change is clearly high leverage
 - Default action:
   - convert into a concrete task, proposal, or direct internal update pass instead of leaving it as a vague idea
 - Ignore / downgrade:
@@ -449,7 +447,7 @@ Use these deterministic routing defaults unless a clearer instruction overrides 
 - direct task CRUD, reprioritization, completion, or current-task review -> `daily-task-manager`
 - morning due-date retuning and daily actionability prep -> `daily-task-prep`
 - meeting notes enter through `executive-assistant`, then route into `business-development` too if the note changes outreach / partner state
-- cross-cutting Todoist follow-up / blocker rules come from `~/.openclaw/skills/task-system-contract/SKILL.md`, not from this file
+- cross-cutting task follow-up / blocker rules come from the task-system skill (if installed), not from this file
 
 If a signal maps to more than one route, choose the workflow that owns the live source of truth being changed.
 
@@ -464,7 +462,7 @@ If a signal maps to more than one route, choose the workflow that owns the live 
 ## Review cadence
 
 Review this file when:
-- Ryan says priorities changed
+- {{OWNER_NAME}} says priorities changed
 - a new person becomes important
 - a new recurring program appears
 - summaries feel noisy or are missing important things

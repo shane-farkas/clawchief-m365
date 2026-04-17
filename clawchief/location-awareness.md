@@ -2,7 +2,7 @@
 
 Status: v1
 Created: 2026-04-06
-Purpose: make clawchief location-aware so Ryan's task list, reminders, and appointment triage reflect where he physically is and whether a task is actually doable from that place.
+Purpose: make clawchief location-aware so {{OWNER_NAME}}'s task list, reminders, and appointment triage reflect where he physically is and whether a task is actually doable from that place.
 
 ## Ownership boundary
 
@@ -19,7 +19,7 @@ This file does not own:
 
 ## Core principle
 
-Do not present a task as actionable if Ryan cannot physically do it from his current location.
+Do not present a task as actionable if {{OWNER_NAME}} cannot physically do it from his current location.
 
 Location is part of task context, not a nice-to-have.
 A good daily plan should distinguish between:
@@ -27,7 +27,7 @@ A good daily plan should distinguish between:
 - can do while traveling
 - requires being at the principal's home base
 - requires being at a specific appointment location
-- can be delegated by R2
+- can be delegated by {{ASSISTANT_NAME}}
 
 ## Current known anchor
 
@@ -36,11 +36,11 @@ A good daily plan should distinguish between:
 
 ## Operating rules
 
-1. When Ryan is traveling, suppress or reframe home-only tasks as blocked, delegated, or rescheduled instead of showing them as normal active tasks.
+1. When {{OWNER_NAME}} is traveling, suppress or reframe home-only tasks as blocked, delegated, or rescheduled instead of showing them as normal active tasks.
 2. When a task clearly depends on a place, add the location constraint into the task text.
 3. When an appointment or meeting is time-bound and location-bound, preserve both in the task text when known.
-4. If Ryan's travel status creates a conflict with an existing task, update the Todoist task in the same turn.
-5. If a task is still important but cannot be done from Ryan's current location, choose one of these states:
+4. If {{OWNER_NAME}}'s travel status creates a conflict with an existing task, update the clawchief/tasks.md task in the same turn.
+5. If a task is still important but cannot be done from {{OWNER_NAME}}'s current location, choose one of these states:
    - blocked while traveling
    - delegate to someone else
    - reschedule to the next plausible date/location window
@@ -51,10 +51,10 @@ A good daily plan should distinguish between:
 
 ## Integration points
 
-- Todoist task wording, section, due date, and labels should reflect location constraints when relevant.
+- clawchief/tasks.md task wording, section, due date, and labels should reflect location constraints when relevant.
 - `clawchief/priority-map.md` already treats travel and schedule integrity as priority context.
-- `daily-task-prep` should use this rule when curating Todoist `Today`.
-- Heartbeat check-ins should avoid nudging Ryan about tasks he cannot physically do from where he is.
+- `daily-task-prep` should use this rule when curating the `## Today` section.
+- Heartbeat check-ins should avoid nudging {{OWNER_NAME}} about tasks he cannot physically do from where he is.
 - The executive-assistant workflow should use this rule before offering times or treating travel windows as available.
 
 ## Examples

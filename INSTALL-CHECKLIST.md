@@ -4,7 +4,9 @@ The install is good only if every item below passes.
 
 ## M365 CLI
 
+- [ ] `m365` is installed system-wide or under the service user (not just the admin account)
 - [ ] `m365 status` shows the correct operating account, Entra app id, and tenant
+- [ ] if running as a service user, `sudo -u <service-user> -H m365 status` also works (tokens are per-user)
 - [ ] `m365 outlook message list --folderName inbox --startTime "$(date -u -d '-7 days' +%Y-%m-%dT%H:%M:%SZ)" --output json` returns recent inbox messages
 - [ ] `m365 request --url "@graph/me/events?\$filter=start/dateTime ge '$(date -u +%Y-%m-%dT00:00:00)' and start/dateTime le '$(date -u -d '+2 days' +%Y-%m-%dT00:00:00)'&\$orderby=start/dateTime&\$top=50" --output json` returns events (the v11 CLI dropped `outlook event list`, so calendar reads now go through Graph)
 - [ ] `m365 request --url "@graph/me/calendars"` returns the calendar set you expect
@@ -19,12 +21,19 @@ The install is good only if every item below passes.
 - [ ] `{{PRIMARY_UPDATE_CHANNEL}}` / `{{PRIMARY_UPDATE_TARGET}}` is a channel the principal actually watches — in read-only mode every would-be action gets drafted here
 - [ ] if flipping modes, `m365 logout` + `m365 login --authType deviceCode --appId {{ENTRA_APP_ID}} --tenant {{ENTRA_TENANT_ID}} --connectionName clawchief` has been re-run so the new scopes are consented on the active token
 
+## Service environment
+
+- [ ] if running via systemd, the service user's PATH includes the directory where `m365` is installed (check with `cat /proc/$(pgrep -f 'openclaw-gateway')/environ | tr '\0' '\n' | grep PATH`)
+- [ ] sandbox is configured to allow workspace writes (`workspaceAccess: "rw"` or `mode: "non-main"`)
+- [ ] if sandbox mode is `"all"`, confirm `m365` is accessible inside the container (or switch to `"non-main"`)
+
 ## Skills
 
-- [ ] `executive-assistant` is installed in `~/.openclaw/skills/`
-- [ ] `business-development` is installed in `~/.openclaw/skills/`
-- [ ] `daily-task-manager` is installed in `~/.openclaw/skills/`
-- [ ] `daily-task-prep` is installed in `~/.openclaw/skills/`
+- [ ] `executive-assistant` is installed in `<workspace>/skills/`
+- [ ] `business-development` is installed in `<workspace>/skills/`
+- [ ] `daily-task-manager` is installed in `<workspace>/skills/`
+- [ ] `daily-task-prep` is installed in `<workspace>/skills/`
+- [ ] skills are referenced in `AGENTS.md` so the agent knows they exist
 
 ## Workspace
 

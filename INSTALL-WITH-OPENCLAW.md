@@ -6,6 +6,13 @@ Follow this in order.
 
 Complete `SETUP-M365.md` first.
 
+**Important:** If OpenClaw runs as a dedicated service user (e.g. `openclaw`), the `m365` CLI must be accessible to that user — not just to your admin/SSH account. Common approaches:
+
+- Install `m365` system-wide with `sudo npm install -g @pnp/cli-microsoft365` so it lands in `/usr/bin/`
+- Or install under the service user: `sudo -u openclaw -H npm install -g @pnp/cli-microsoft365`
+- Run `m365 login` as the service user too: `sudo -u openclaw -H m365 login --authType deviceCode ...` — tokens are per-user and do not transfer between OS accounts
+- If the service runs via systemd, ensure `/usr/bin` (or wherever `m365` lives) is in the service's PATH. You may need to add `PATH=...` to the `EnvironmentFile` referenced by the unit.
+
 The default install is **read-only** against Outlook, Calendar, and SharePoint. The only Graph write scope the Entra app ships with is `Tasks.ReadWrite`, so the Microsoft To Do mirror of `clawchief/tasks.md` can run. Every other would-be write (sending mail, creating events, moving messages, updating the SharePoint tracker) is drafted to `{{PRIMARY_UPDATE_CHANNEL}} -> {{PRIMARY_UPDATE_TARGET}}` for manual approval.
 
 Do not continue until these all work:
@@ -50,18 +57,40 @@ Optional additional values if you use more calendars:
 - `{{SECONDARY_CALENDAR_EMAIL_2}}`
 - `{{SECONDARY_CALENDAR_EMAIL_3}}`
 
-## 2. Install the skills
+## 2. Find the real workspace path
 
-Copy these directories into `~/.openclaw/skills/`:
+OpenClaw's workspace location depends on your installation. Common locations:
+
+- `~/.openclaw/workspace/` (user installs)
+- `/var/lib/openclaw/.openclaw/workspace/` (systemd service with a dedicated `openclaw` user)
+
+Check which user the service runs as and where its home directory is:
+
+```bash
+getent passwd openclaw          # shows home directory
+systemctl show openclaw --property=ExecStart  # shows the binary path
+ls /var/lib/openclaw/.openclaw/workspace/     # typical service install
+```
+
+Skills typically live at `<workspace>/skills/`, **not** at `~/.openclaw/skills/` as a sibling to `workspace/`. Check your existing workspace layout before copying.
+
+## 3. Install the skills
+
+Copy these directories into `<workspace>/skills/` alongside any existing OpenClaw skills (e.g. `memento-memory`, `x-search`):
 
 - `skills/executive-assistant`
 - `skills/business-development`
 - `skills/daily-task-manager`
 - `skills/daily-task-prep`
 
-## 3. Install the workspace files
+If the service runs as a dedicated user, fix ownership after copying:
+```bash
+sudo chown -R openclaw:openclaw <workspace>/skills/
+```
 
-Copy these into `~/.openclaw/workspace/`:
+## 4. Install the workspace files
+
+Copy these into `<workspace>/`:
 
 - `clawchief/`
 - `workspace/HEARTBEAT.md`
@@ -71,8 +100,9 @@ Copy these into `~/.openclaw/workspace/`:
 Note:
 - `workspace/tasks/current.md` is included only as a deprecation note for older installs
 - the live task source of truth is now `clawchief/tasks.md`
+- if the workspace already has `HEARTBEAT.md`, `TOOLS.md`, etc. from OpenClaw's default scaffold, the pack's versions replace them
 
-## 4. Add your private workspace files
+## 5. Add your private workspace files
 
 This public pack does *not* ship personal context files.
 
@@ -85,7 +115,7 @@ Create your own versions of these if your setup depends on them:
 - `MEMORY.md`
 - `memory/`
 
-## 5. Replace placeholders
+## 6. Replace placeholders
 
 Replace every placeholder token before testing.
 
@@ -117,7 +147,19 @@ Then customize these files for your real workflow:
 - `skills/business-development/resources/partners.md`
 - `cron/jobs.template.json`
 
-## 6. Create the cron jobs
+## 7. Configure the sandbox
+
+If OpenClaw uses Docker sandboxing (`sandbox.mode: "all"` or `"non-main"` in `openclaw.json`), the workspace needs write access for the pack to function:
+
+- `clawchief/tasks.md` and `clawchief/tasks-completed.md` are written during task management
+- `workspace/memory/` is updated by meeting-note ingestion
+- `HEARTBEAT.md` is updated during heartbeat checks
+
+Set `"workspaceAccess": "rw"` in the sandbox config, or use `"mode": "non-main"` so the main session (where the EA sweep runs) executes on the host with full access to `m365` and the workspace.
+
+If sandbox mode is `"all"`, tools installed on the host (like `m365`) are not available inside the Docker container. Use `"non-main"` or bind-mount the `m365` binary and its token storage into the container.
+
+## 8. Create the cron jobs
 
 Use `cron/jobs.template.json` as the starting pattern.
 
@@ -138,6 +180,6 @@ Notes:
 - keep backup disabled until the remote repo and allowlist are correct
 - keep self-update disabled unless you explicitly want that behavior
 
-## 7. Validate the install
+## 9. Validate the install
 
 Run `INSTALL-CHECKLIST.md`.

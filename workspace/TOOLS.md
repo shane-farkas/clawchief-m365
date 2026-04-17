@@ -44,13 +44,36 @@ Single-operator note: `m365 login` authenticates exactly one user at a time and 
 
 ## Calendars to check
 
-List the calendars that should be treated as real availability constraints.
+Calendars that count as real availability constraints:
 
-Example:
 - `{{PRIMARY_WORK_EMAIL}}`
 - `{{PERSONAL_EMAIL}}`
-- `{{SECONDARY_CALENDAR_EMAIL_1}}`
-- Family calendar (conflict source only unless explicitly desired)
+
+Add additional calendars here as needed (e.g. shared team calendar, family calendar as conflict source only).
+
+## Calendar display preferences
+
+- **Always display times in the principal's time zone** (`{{TIMEZONE}}`). Never show raw UTC.
+- When reading events via Graph, pass the `Prefer` header so the API returns local times:
+  ```bash
+  m365 request \
+    --url "@graph/me/calendarView?startDateTime=$(date -u +%Y-%m-%dT00:00:00Z)&endDateTime=$(date -u -d '+2 days' +%Y-%m-%dT00:00:00Z)&\$orderby=start/dateTime&\$top=50" \
+    --accept "application/json" \
+    -H "Prefer: outlook.timezone=\"{{TIMEZONE}}\"" \
+    --output json
+  ```
+  If the `Prefer` header is not supported by the CLI, convert UTC timestamps to `{{TIMEZONE}}` before displaying.
+- **Format:** `9:30 AM PT` (12-hour clock, PT/PDT shorthand)
+- **Skip these event types in daily summaries:**
+  - Cancelled events
+  - Events the principal declined
+  - All-day events unless they look like deadlines or PTO (use subject line to judge)
+  - Recurring "focus time" or "lunch" blocks the principal set for themselves
+- **Include in daily summaries:**
+  - Meetings with other people (show attendees)
+  - Calls and interviews
+  - Deadlines or reminders set as calendar events
+  - Events from all checked calendars, not just the default
 
 ## Outreach tracker
 

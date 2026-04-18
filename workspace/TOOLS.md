@@ -120,6 +120,25 @@ Planner fields differ from To Do: use `title` (not `subject`), `percentComplete`
 - The mirror is one-way: tasks.md is the source of truth, the To Do list is a phone / desktop visibility surface. Do not edit the To Do list expecting changes to flow back into tasks.md — check items off in tasks.md (or let the next prep run rebuild the list).
 - Assistant-owned tasks are intentionally excluded from the mirror.
 
+## Meeting notes source
+
+- Location: OneDrive folder `/Meeting Notes/`
+- Check for new or updated files in this folder during each EA sweep
+- Supported formats: Word docs, text files, pasted transcripts
+- The agent can also accept meeting notes pasted directly into Telegram chat
+- Processing policy: `clawchief/meeting-notes.md`
+- Processed-doc ledger: `workspace/memory/meeting-notes-state.json`
+
+To read the folder contents:
+```bash
+m365 request --url "https://graph.microsoft.com/v1.0/me/drive/root:/Meeting Notes:/children" --output json
+```
+
+To read a specific file:
+```bash
+m365 request --url "https://graph.microsoft.com/v1.0/me/drive/root:/Meeting Notes/<filename>:/content"
+```
+
 ## Business-development playbook
 
 Document your default sourcing motion here.
